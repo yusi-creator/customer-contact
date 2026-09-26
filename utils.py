@@ -316,11 +316,12 @@ def notice_slack(chat_message):
     # Slack通知用のAgent Executorを作成
     toolkit = SlackToolkit()
     tools = toolkit.get_tools()
+
     agent_executor = initialize_agent(
         llm=st.session_state.llm,
         tools=tools,
-        agent=AgentType.STRUCTURED_CHAT_ZERO_SHOT_REACT_DESCRIPTION
-    )
+        agent=AgentType.STRUCTURED_CHAT_ZERO_SHOT_REACT_DESCRIPTION,
+        )
 
     # 担当者割り振りに使う用の「従業員情報」と「問い合わせ対応履歴」の読み込み
     loader = CSVLoader(ct.EMPLOYEE_FILE_PATH, encoding=ct.CSV_ENCODING)
@@ -402,7 +403,6 @@ def notice_slack(chat_message):
 
     # Slack通知の実行
     agent_executor.invoke({"input": prompt_message})
-
     return ct.CONTACT_THANKS_MESSAGE
 
 

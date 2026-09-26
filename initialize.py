@@ -148,6 +148,18 @@ def initialize_agent_executor():
             name = ct.SEARCH_WEB_INFO_TOOL_NAME,
             func=search.run,
             description=ct.SEARCH_WEB_INFO_TOOL_DESCRIPTION
+        ),
+        # 従業員情報検索用のTool
+        Tool(
+            name="search_employee_info_tool",
+            func=utils.search_employee_info,
+            description="従業員情報から、問い合わせ内容に対応可能な担当者を検索する"
+        ),
+        # 問い合わせ履歴検索用のTool
+        Tool(
+            name="search_inquiry_history_tool",
+            func=utils.search_inquiry_history,
+            description="過去の問い合わせ対応履歴から、類似した問い合わせや対応内容を検索する"
         )
     ]
 

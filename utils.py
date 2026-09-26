@@ -32,6 +32,7 @@ from langchain.output_parsers import CommaSeparatedListOutputParser
 from langchain import LLMChain
 import datetime
 import constants as ct
+import pandas as pd
 
 
 ############################################################
@@ -206,6 +207,43 @@ def run_customer_doc_chain(param):
     st.session_state.chat_history.extend([HumanMessage(content=param), AIMessage(content=ai_msg["answer"])])
 
     return ai_msg["answer"]
+
+def search_employee_info(param):
+    """
+    従業員情報から、問い合わせ内容に関連する担当者を検索する
+    """
+    df = pd.read_csv("data/slack/従業員情報.csv")
+
+    matched = df[
+        df.astype(str).apply(
+            lambda row: row.str.contains(param, case=False, na=False).any(),
+            axis=1
+        )
+    ]
+
+    if matched.empty:
+        return "該当する従業員情報は見つかりませんでした。"
+
+    return matched.to_string(index=False)
+
+
+def search_inquiry_history(param):
+    """
+    過去の問い合わせ対応履歴から、関連する履歴を検索する
+    """
+    df = pd.read_csv("data/slack/問い合わせ対応履歴.csv")
+
+    matched = df[
+        df.astype(str).apply(
+            lambda row: row.str.contains(param, case=False, na=False).any(),
+            axis=1
+        )
+    ]
+
+    if matched.empty:
+        return "該当する問い合わせ対応履歴は見つかりませんでした。"
+
+    return matched.to_string(index=False)
 
 
 def delete_old_conversation_log(result):
